@@ -1,0 +1,19 @@
+faire 3 fonctions :
+
+int remalloc(char **remain)
+		-prend en parametre 1 double char et qui le remalloc sa taille + BUFF_SIZE
+		-retourne 1 si ok
+
+int remplirline(int buffer, char **remain, char **line)
+		-met tout le contenu de remain dans line jusquau prochain \n
+		-si remain a encore du contenu alors tout alors enlever tout ce qu'il y a avant le \n
+		-"   \ntoto\0" devient "toto\0"
+
+int get_next_line(int fd, char **line)
+		-fonction principale de gnl
+		-gestion d'erreur retourne -1 erreur
+		-creer remain de la taille de BUFF_SIZE
+		-mallocer *line
+		-tant que buff > 0 : essayer de faire remalloc(), concatener save et *line, break si line contient un \n
+		-si remplirline reussi alors retourne 1 fini
+		-sinon si memcmp line et save reussi alors retourne 0
