@@ -6,12 +6,12 @@
 /*   By: acourtin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/24 17:37:31 by acourtin          #+#    #+#             */
-/*   Updated: 2017/11/26 15:26:31 by acourtin         ###   ########.fr       */
+/*   Updated: 2017/11/26 17:28:41 by acourtin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "libft.h"
+#include "./libft/libft.h"
 #include <stdlib.h>
 #include <fcntl.h>
 #include <stdio.h>
