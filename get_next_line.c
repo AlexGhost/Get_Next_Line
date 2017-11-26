@@ -6,92 +6,97 @@
 /*   By: acourtin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/23 15:04:13 by acourtin          #+#    #+#             */
-/*   Updated: 2017/11/25 18:48:05 by acourtin         ###   ########.fr       */
+/*   Updated: 2017/11/26 16:08:29 by acourtin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "./Libft/libft.h"
+#include "./libft/libft.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
 
-int				get_next_line(const int fd, char **line)
+static int		remalloc(char **remain)
 {
-	static int		bufpos = 0;
-	static char		reste[BUFF_SIZE + 1] = "\0";
-	char			*c;
-	int				buffer;
-	int				i;
-	int				j;
-	int				k;
-	char			*str;
-	int				write;
+	char *tmp;
 
-	if (fd <= 0)
-		return (-1);
-	buffer = 0;
-	write = 1;
+	if (!(*remain))
+		return (0);
+	tmp = ft_strnew((size_t) ft_strlen(*remain));
+	ft_strcpy(tmp, *remain);
+	*remain = NULL;
+	*remain = ft_strnew((size_t) (ft_strlen(tmp) + BUFF_SIZE));
+	ft_strcpy(*remain, tmp);
+	return (1);
+}
+
+static int		to_line(int buffer, char **remain, char **line)
+{
+	int i;
+	int j;
+
 	i = 0;
-	if (!line)
-		return (-1);
-	str = *line;
-	c = ft_strnew(BUFF_SIZE + 1);
-	buffer = read(fd, c, BUFF_SIZE);
-	printf("buffer = %i\n", buffer);
-	if (buffer == -1)
+	if (buffer != 0 || ft_strlen(*remain) != 0)
 	{
-		printf("errno = %s\n", strerror(errno));
-		return (-1);
-	}
-	j = 0;
-	while (reste[j])
-	{
-		str[j] = reste[j];
-		j++;
-	}
-	i = 0;
-	while (c[i] == '\n')
-		i++;
-	if (buffer > 0)
-	{
-		while (write == 1 && c[i] != '\0')
+		while ((*remain)[i] != '\n')
 		{
-			if (i >= BUFF_SIZE - 1)
+			(*line)[i] = (*remain)[i];
+			i++;
+			if (!(*remain)[i])
+				break ;
+		}
+		(*line)[i] = '\0';
+		i++;
+		if ((*remain)[0] != '\n')
+		{
+			j = 0;
+			while ((*remain)[i])
 			{
-				buffer = read(fd, c, BUFF_SIZE);
-				i = 0;
-			}
-			if (c[i] == '\n' || c[i] == '\0')
-			{
-				str[j] = '\0';
-				bufpos += i;
-				write = 0;
-			}
-			else
-			{
-				str[j] = c[i];
+				(*remain)[j] = (*remain)[i];
 				i++;
 				j++;
 			}
+			(*remain)[j] = '\0';
+			return (1);
 		}
-		while (c[i] == '\n')
-			i++;
-		k = 0;
-		while (c[i] != '\0' && c[i] != '\n')
+		j = 0;
+		while ((*remain)[i])
 		{
-			reste[k] = c[i];
+			(*remain)[j] = (*remain)[i];
 			i++;
-			k++;
+			j++;
 		}
-		//printf("reste = %s\n", reste);
-		i = 0;
-		str[j] = '\0';
-		if (write == 1)
-			bufpos += BUFF_SIZE;
-		printf("bufpos = %i\n", bufpos);
-		return (1);
+		(*remain)[j] = '\0';
 	}
 	return (0);
+}
+
+int				get_next_line(const int fd, char **line)
+{
+	static char	*remain;
+	int			buffer;
+
+	if ((!remain && !(remain = ft_strnew(1))) || !(*line = ft_strnew(BUFF_SIZE)))
+		return (-1);
+	while ((buffer = read(fd, *line, BUFF_SIZE)) > 0)
+	{
+		if (remalloc(&remain) == 0)
+			return (-1);
+		remain = ft_strcat(remain, *line);
+		if (ft_strchr(*line, '\n'))
+			break ;
+	}
+	if (to_line(buffer, &remain, line) == 1)
+	{
+		printf("line = %s\nremain = %s\n", *line, remain);
+		return (1);
+	}
+	else if (ft_memcmp(*line, remain, ft_strlen(*line)) == 0)
+	{
+		if (ft_strcmp(ft_strdup(""), *line) != 0)
+			return (1);
+		return (0);
+	}
+	return (1);
 }
