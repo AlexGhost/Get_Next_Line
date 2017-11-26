@@ -23,10 +23,10 @@ static int		remalloc(char **remain)
 
 	if (!(*remain))
 		return (0);
-	tmp = ft_strnew((size_t) ft_strlen(*remain));
+	tmp = ft_strnew(ft_strlen(*remain));
 	ft_strcpy(tmp, *remain);
 	*remain = NULL;
-	*remain = ft_strnew((size_t) (ft_strlen(tmp) + BUFF_SIZE));
+	*remain = ft_strnew(ft_strlen(tmp) + BUFF_SIZE);
 	ft_strcpy(*remain, tmp);
 	return (1);
 }
@@ -38,7 +38,7 @@ static int		to_line(int buffer, char **remain, char **line)
 
 	i = 0;
 	j = 0;
-	if (buffer != 0 || ft_strlen(*remain) != 0)
+	if (buffer != 0 || ft_strlen((*remain)) != 0)
 	{
 		while ((*remain)[i] != '\n')
 		{
@@ -80,19 +80,19 @@ int				get_next_line(const int fd, char **line)
 	{
 		if (remalloc(&remain) == 0)
 			return (-1);
-		remain = ft_strcat(remain, *line);
-		if (ft_strchr(*line, '\n'))
+		ft_strncat(remain, *line, BUFF_SIZE);
+		if (ft_memchr(*line, '\n', BUFF_SIZE))
 			break ;
 	}
-	printf("line = %s\nremain = %s\n", *line, remain);
+	//printf("line = %s\nremain = %s\n", *line, remain);
 	if (to_line(buffer, &remain, line) == 1)
 	{
 		return (1);
 	}
-	printf("line = %s\nremain = %s\n", *line, remain);
+	//printf("line = %s\nremain = %s\n", *line, remain);
 	if (ft_memcmp(*line, remain, ft_strlen(*line)) == 0)
 	{
-		if (ft_strcmp(ft_strdup(""), *line) != 0)
+		if (!(*line = ft_strdup("")))
 			return (1);
 		return (0);
 	}
