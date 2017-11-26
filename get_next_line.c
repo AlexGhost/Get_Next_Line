@@ -6,7 +6,7 @@
 /*   By: acourtin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/23 15:04:13 by acourtin          #+#    #+#             */
-/*   Updated: 2017/11/26 16:08:29 by acourtin         ###   ########.fr       */
+/*   Updated: 2017/11/26 16:49:01 by acourtin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,14 @@ static int		to_line(int buffer, char **remain, char **line)
 
 int				get_next_line(const int fd, char **line)
 {
+	static int	r = 0;
 	static char	*remain;
 	int			buffer;
 
-	if ((!remain && !(remain = ft_strnew(1))) || !(*line = ft_strnew(BUFF_SIZE)))
+	if ((!remain && !(remain = ft_strnew(1))) || !(*line = ft_strnew(BUFF_SIZE)) || fd < 0)
 		return (-1);
+	if (r == 1)
+		return (0);
 	while ((buffer = read(fd, *line, BUFF_SIZE)) > 0)
 	{
 		if (remalloc(&remain) == 0)
@@ -89,7 +92,9 @@ int				get_next_line(const int fd, char **line)
 	}
 	if (to_line(buffer, &remain, line) == 1)
 	{
-		printf("line = %s\nremain = %s\n", *line, remain);
+		//printf("line = %s\nremain = %s\n", *line, remain);
+		if (ft_memcmp((*line) + 1, remain, ft_strlen(remain)) == 0)
+			r = 1;
 		return (1);
 	}
 	else if (ft_memcmp(*line, remain, ft_strlen(*line)) == 0)
