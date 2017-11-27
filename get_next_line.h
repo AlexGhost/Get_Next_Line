@@ -6,14 +6,13 @@
 /*   By: acourtin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/23 15:04:59 by acourtin          #+#    #+#             */
-/*   Updated: 2017/11/27 15:03:03 by acourtin         ###   ########.fr       */
+/*   Updated: 2017/11/27 22:40:24 by acourtin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include <unistd.h>
 # define BUFF_SIZE 32
 
 int				get_next_line(const int fd, char **line);
