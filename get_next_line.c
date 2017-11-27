@@ -6,14 +6,14 @@
 /*   By: acourtin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/23 15:04:13 by acourtin          #+#    #+#             */
-/*   Updated: 2017/11/27 22:40:29 by acourtin         ###   ########.fr       */
+/*   Updated: 2017/11/27 23:01:09 by acourtin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "./libft/libft.h"
 
-int				remalloc(char **save)
+static int		remalloc(char **save)
 {
 	char *tmp;
 
@@ -26,7 +26,7 @@ int				remalloc(char **save)
 	return (1);
 }
 
-int				process(char **save, char **line)
+static int		process(char **save, char **line)
 {
 	unsigned long	i;
 	int				write;
