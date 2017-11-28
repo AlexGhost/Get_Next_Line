@@ -6,7 +6,7 @@
 /*   By: acourtin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/23 15:04:13 by acourtin          #+#    #+#             */
-/*   Updated: 2017/11/28 13:19:27 by acourtin         ###   ########.fr       */
+/*   Updated: 2017/11/28 15:22:27 by acourtin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ static int		remalloc(char **save)
 
 static int		process(char **save, char **line)
 {
-	unsigned long	i;
-	int				write;
+	unsigned long long int	i;
+	int						write;
 
 	i = 0;
 	write = 0;
@@ -61,7 +61,9 @@ int				get_next_line(const int fd, char **line)
 		return (-1);
 	while ((b = read(fd, *line, BUFF_SIZE)) != 0)
 	{
-		if (remalloc(&save) == 0 || b < 0)
+		if (b < 0)
+			return (-1);
+		if (remalloc(&save) == 0)
 			return (-1);
 		save = ft_strncat(save, *line, b);
 		if (ft_memchr(save, '\n', BUFF_SIZE))
@@ -69,5 +71,6 @@ int				get_next_line(const int fd, char **line)
 	}
 	if (process(&save, line))
 		return (1);
+	ft_strdel(&save);
 	return (0);
 }
