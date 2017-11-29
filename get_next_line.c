@@ -56,8 +56,8 @@ int				get_next_line(const int fd, char **line)
 	static char	*save;
 	int			b;
 
-	if (!line || (!save && !(save = ft_strnew(BUFF_SIZE * 2))) \
-			|| !(*line = ft_strnew(BUFF_SIZE)) || fd < 0)
+	if (!line || (!save && !(save = ft_strnew(BUFF_SIZE))) \
+			|| !(*line = ft_strnew(BUFF_SIZE)) || fd < 0 || BUFF_SIZE <= 0)
 		return (-1);
 	while ((b = read(fd, *line, BUFF_SIZE)) != 0)
 	{
